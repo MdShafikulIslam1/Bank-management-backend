@@ -4,10 +4,13 @@ const handleValidationError = (
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   error: any
 ): IGenericErrorResponse => {
+  const lines = error.message.trim().split('\n');
+  // console.log(lines[lines.length - 1])
+
   const errors = [
     {
       path: '',
-      message: error.message,
+      message: lines[lines.length - 1],
     },
   ];
   const statusCode = 400;
