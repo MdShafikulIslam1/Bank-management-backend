@@ -9,3 +9,22 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  user_id                String @id @default(uuid())
+  username               String @unique
+  password               String
+  confirm_password       String
+  email                  String @unique
+  full_name              String
+  address                String
+  primary_phone_number   String
+  secondary_phone_number String
+  destignation           String
+  account_balance        Float
+  // transactions    Transaction[]
+  // cards           Card[]
+  // loans           Loan[]
+
+  @@map("users")
+}
