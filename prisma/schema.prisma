@@ -8,25 +8,23 @@ datasource db {
 }
 
 model User {
-  user_id                String      @id @default(uuid())
-  user_name              String      @unique
-  password               String
-  confirm_password       String
-  email                  String      @unique
-  role                   UserRole    @default(CUSTOMER)
-  full_name              String
-  date_of_birth          String?
-  gender                 GenderTerm  @default(MALE)
-  address                String?
-  designation            BankRole    @default(CUSTOMER)
-  primary_phone_number   String
-  secondary_phone_number String?
-  is_valid               Boolean     @default(false)
-  account_balance        Float       @default(0.00)
-  account_type           AccountType @default(SAVINGS_ACCOUNT)
-  cards                  Card[]
+  user_id              String      @id @default(uuid())
+  user_name            String      @unique
+  email                String      @unique
+  password             String
+  confirm_password     String
+  role                 UserRole    @default(CUSTOMER)
+  full_name            String
+  address              String?
+  designation          BankRole    @default(CUSTOMER)
+  primary_phone_number String
+  profile_image        String?
+  is_valid             Boolean     @default(false)
+  account_balance      Float       @default(0.00)
+  account_type         AccountType @default(SAVINGS_ACCOUNT)
+  cards                Card[]
   // loans           Loan[]
-  deposits               Deposit[]
+  deposits             Deposit[]
 
   withdrawals  Withdrawal[]
   creaed_at    DateTime      @default(now())
