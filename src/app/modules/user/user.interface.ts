@@ -1,9 +1,6 @@
-export type ILogIn = {
-  user_name: string;
-  password: string;
-};
-
-export type IChangePassword = {
-  oldPassword: string;
-  newPassword: string;
+export type IUserFilterRequest = {
+  searchTerm?: string | undefined;
+  user_name?: string | undefined;
+  email?: string | undefined;
+  primary_phone_number?: string | undefined;
 };
