@@ -8,76 +8,63 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __rest = (this && this.__rest) || function (s, e) {
-    var t = {};
-    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
-        t[p] = s[p];
-    if (s != null && typeof Object.getOwnPropertySymbols === "function")
-        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
-            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
-                t[p[i]] = s[p[i]];
-        }
-    return t;
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserController = void 0;
+const http_status_1 = __importDefault(require("http-status"));
 const catchAsync_1 = __importDefault(require("../../../shared/catchAsync"));
+const pick_1 = __importDefault(require("../../../shared/pick"));
 const sendResponse_1 = __importDefault(require("../../../shared/sendResponse"));
 const user_service_1 = require("./user.service");
-const createAccount = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const user = yield user_service_1.UserService.createAccount(req.body);
+const user_constant_1 = require("./user.constant");
+const getAllFromDB = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const filters = (0, pick_1.default)(req.query, user_constant_1.userFilterableFields);
+    const options = (0, pick_1.default)(req.query, ['limit', 'page', 'sortBy', 'sortOrder']);
+    const result = yield user_service_1.UserService.getAllFromDB(filters, options);
     (0, sendResponse_1.default)(res, {
-        statusCode: 201,
+        statusCode: http_status_1.default.OK,
         success: true,
-        message: 'Account created successfully',
-        data: user,
+        message: 'Users fetched successfully',
+        meta: result.meta,
+        data: result.data,
     });
 }));
-const login = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const token = yield user_service_1.UserService.login(req.body);
+const getByIdFromDB = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
+    const result = yield user_service_1.UserService.getByIdFromDB(id);
     (0, sendResponse_1.default)(res, {
-        statusCode: 201,
+        statusCode: http_status_1.default.OK,
         success: true,
-        message: 'Login successful',
-        data: token,
+        message: 'User fetched successfully',
+        data: result,
     });
 }));
-const changePassword = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a;
-    const user_id = (_a = req.user) === null || _a === void 0 ? void 0 : _a.user_id;
-    const passwordData = __rest(req.body, []);
-    yield user_service_1.UserService.changePassword(user_id, passwordData);
+const updateIntoDB = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
+    const payload = req.body;
+    const result = yield user_service_1.UserService.updateIntoDB(id, payload);
     (0, sendResponse_1.default)(res, {
-        statusCode: 200,
+        statusCode: http_status_1.default.OK,
         success: true,
-        message: 'Password changed successfully!',
+        message: 'User updated successfully',
+        data: result,
     });
 }));
-const forgotPassword = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _b;
-    const result = yield user_service_1.UserService.forgotPassword((_b = req === null || req === void 0 ? void 0 : req.body) === null || _b === void 0 ? void 0 : _b.email);
+const deleteFromDB = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
+    const result = yield user_service_1.UserService.deleteFromDB(id);
     (0, sendResponse_1.default)(res, {
-        statusCode: 200,
+        statusCode: http_status_1.default.OK,
         success: true,
-        message: result,
-    });
-}));
-const resetPassword = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const token = req.headers.authorization || '';
-    const result = yield user_service_1.UserService.resetPassword(req.body, token);
-    (0, sendResponse_1.default)(res, {
-        statusCode: 200,
-        success: true,
-        message: result,
+        message: 'User deleted successfully',
+        data: result,
     });
 }));
 exports.UserController = {
-    createAccount,
-    login,
-    changePassword,
-    forgotPassword,
-    resetPassword,
+    getAllFromDB,
+    getByIdFromDB,
+    updateIntoDB,
+    deleteFromDB,
 };
