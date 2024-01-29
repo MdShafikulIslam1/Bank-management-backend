@@ -10,12 +10,18 @@ import config from '../../../config';
 import { SendEmail } from './sendEmail';
 
 const createAccount = async (data: User): Promise<User | null> => {
-  const { password } = data;
+  const { password, confirm_password } = data;
+  if (password !== confirm_password) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Passwords do not match');
+  }
   const hashedPassword = await bcrypt.hash(password, 12);
+  const hashedConfirmPassword = await bcrypt.hash(confirm_password, 12);
+
   const result = await prisma.user.create({
     data: {
       ...data,
       password: hashedPassword,
+      confirm_password: hashedConfirmPassword,
     },
   });
 
@@ -25,7 +31,7 @@ const createAccount = async (data: User): Promise<User | null> => {
 const login = async (payload: ILogIn): Promise<string> => {
   const { user_name, password } = payload;
 
-  const isUserExist = await prisma.user.findUnique({
+  const isUserExist = await prisma.user.findFirst({
     where: {
       user_name,
     },
