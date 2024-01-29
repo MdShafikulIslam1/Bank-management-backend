@@ -27,7 +27,7 @@ model User {
   deposits             Deposit[]
 
   withdrawals  Withdrawal[]
-  creaed_at    DateTime      @default(now())
+  created_at    DateTime      @default(now())
   update_at    DateTime      @updatedAt
   transactions Transaction[]
 

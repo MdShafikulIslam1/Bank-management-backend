@@ -1,22 +1,14 @@
 import { Router } from 'express';
 import { UserController } from './user.controller';
-import Auth from '../../middlewares/Auth';
-import { UserRole } from '@prisma/client';
 
 const router = Router();
 
-router.post('/create-account', UserController.createAccount);
+router.get('/', UserController.getAllFromDB);
 
-router.post('/login', UserController.login);
+router.get('/:id', UserController.getByIdFromDB);
 
-router.post(
-  '/change-password',
-  Auth(UserRole.CUSTOMER, UserRole.CUSTOMER),
-  UserController.changePassword
-);
+router.patch('/:id', UserController.updateIntoDB);
 
-router.post('/forgot-password', UserController.forgotPassword);
+router.delete('/:id', UserController.deleteFromDB);
 
-router.post('/reset-password', UserController.resetPassword);
-
-export const UserRouter = router;
+export const UserRoutes = router;

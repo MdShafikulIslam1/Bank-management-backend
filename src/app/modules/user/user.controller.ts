@@ -1,61 +1,61 @@
+import { Request, Response } from 'express';
+import httpStatus from 'http-status';
 import catchAsync from '../../../shared/catchAsync';
+import pick from '../../../shared/pick';
 import sendResponse from '../../../shared/sendResponse';
 import { UserService } from './user.service';
+import { userFilterableFields } from './user.constant';
 
-const createAccount = catchAsync(async (req, res) => {
-  const user = await UserService.createAccount(req.body);
+const getAllFromDB = catchAsync(async (req: Request, res: Response) => {
+  const filters = pick(req.query, userFilterableFields);
+  const options = pick(req.query, ['limit', 'page', 'sortBy', 'sortOrder']);
+  const result = await UserService.getAllFromDB(filters, options);
   sendResponse(res, {
-    statusCode: 201,
+    statusCode: httpStatus.OK,
     success: true,
-    message: 'Account created successfully',
-    data: user,
+    message: 'Users fetched successfully',
+    meta: result.meta,
+    data: result.data,
   });
 });
 
-const login = catchAsync(async (req, res) => {
-  const token = await UserService.login(req.body);
+const getByIdFromDB = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const result = await UserService.getByIdFromDB(id);
   sendResponse(res, {
-    statusCode: 201,
+    statusCode: httpStatus.OK,
     success: true,
-    message: 'Login successful',
-    data: token,
+    message: 'User fetched successfully',
+    data: result,
   });
 });
 
-const changePassword = catchAsync(async (req, res) => {
-  const user_id = req.user?.user_id;
-  const { ...passwordData } = req.body;
-  await UserService.changePassword(user_id, passwordData);
+const updateIntoDB = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const payload = req.body;
+  const result = await UserService.updateIntoDB(id, payload);
   sendResponse(res, {
-    statusCode: 200,
+    statusCode: httpStatus.OK,
     success: true,
-    message: 'Password changed successfully!',
+    message: 'User updated successfully',
+    data: result,
   });
 });
 
-const forgotPassword = catchAsync(async (req, res) => {
-  const result = await UserService.forgotPassword(req?.body?.email);
+const deleteFromDB = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const result = await UserService.deleteFromDB(id);
   sendResponse(res, {
-    statusCode: 200,
+    statusCode: httpStatus.OK,
     success: true,
-    message: result,
-  });
-});
-
-const resetPassword = catchAsync(async (req, res) => {
-  const token = req.headers.authorization || '';
-  const result = await UserService.resetPassword(req.body, token);
-  sendResponse(res, {
-    statusCode: 200,
-    success: true,
-    message: result,
+    message: 'User deleted successfully',
+    data: result,
   });
 });
 
 export const UserController = {
-  createAccount,
-  login,
-  changePassword,
-  forgotPassword,
-  resetPassword,
+  getAllFromDB,
+  getByIdFromDB,
+  updateIntoDB,
+  deleteFromDB,
 };
