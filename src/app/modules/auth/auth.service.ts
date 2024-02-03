@@ -10,17 +10,13 @@ import config from '../../../config';
 import { SendEmail } from './sendEmail';
 
 const createAccount = async (data: User): Promise<User | null> => {
-  const { password, confirm_password } = data;
-  if (password !== confirm_password) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Passwords do not match');
-  }
+  const { password } = data;
+
   const hashedPassword = await bcrypt.hash(password, 12);
-  const hashedConfirmPassword = await bcrypt.hash(confirm_password, 12);
   const result = await prisma.user.create({
     data: {
       ...data,
       password: hashedPassword,
-      confirm_password: hashedConfirmPassword,
     },
   });
   return result;
@@ -48,10 +44,10 @@ const login = async (payload: ILogIn): Promise<string> => {
 
   //create access token & refresh token
 
-  const { user_id, email, role } = isUserExist;
+  const { id, email, role } = isUserExist;
 
   const accessToken = JwtHelpers.createToken(
-    { user_id, email, role },
+    { id, email, role },
     config.jwt.secret as Secret,
     config.jwt.expires_in as string
   );
@@ -66,7 +62,7 @@ const changePassword = async (
   const { oldPassword, newPassword } = payload;
   const isUserExist = await prisma.user.findUnique({
     where: {
-      user_id: user_id,
+      id: user_id,
     },
   });
 
@@ -84,7 +80,7 @@ const changePassword = async (
 
   await prisma.user.update({
     where: {
-      user_id: user_id,
+      id: user_id,
     },
     data: {
       password: await bcrypt.hash(newPassword, 12),

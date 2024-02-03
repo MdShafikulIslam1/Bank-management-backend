@@ -78,7 +78,7 @@ const getAllFromDB = async (
 const getByIdFromDB = async (id: string): Promise<User | null> => {
   const result = await prisma.user.findUnique({
     where: {
-      user_id: id,
+      id: id,
     },
     include: {
       cards: true,
@@ -98,7 +98,7 @@ const updateIntoDB = async (
 ): Promise<User> => {
   const result = await prisma.user.update({
     where: {
-      user_id: id,
+      id: id,
     },
     data: payload,
     include: {
@@ -116,7 +116,7 @@ const updateIntoDB = async (
 const deleteFromDB = async (id: string): Promise<User> => {
   const result = await prisma.user.delete({
     where: {
-      user_id: id,
+      id: id,
     },
     include: {
       cards: true,

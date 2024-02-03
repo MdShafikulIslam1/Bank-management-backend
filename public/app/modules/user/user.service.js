@@ -87,7 +87,7 @@ const getAllFromDB = (filters, options) => __awaiter(void 0, void 0, void 0, fun
 const getByIdFromDB = (id) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield prisma_1.default.user.findUnique({
         where: {
-            user_id: id,
+            id: id,
         },
         include: {
             cards: true,
@@ -103,7 +103,7 @@ const getByIdFromDB = (id) => __awaiter(void 0, void 0, void 0, function* () {
 const updateIntoDB = (id, payload) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield prisma_1.default.user.update({
         where: {
-            user_id: id,
+            id: id,
         },
         data: payload,
         include: {
@@ -120,7 +120,7 @@ const updateIntoDB = (id, payload) => __awaiter(void 0, void 0, void 0, function
 const deleteFromDB = (id) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield prisma_1.default.user.delete({
         where: {
-            user_id: id,
+            id: id,
         },
         include: {
             cards: true,
