@@ -8,11 +8,10 @@ datasource db {
 }
 
 model User {
-  user_id              String      @id @default(uuid())
+  id                   String      @id @default(uuid())
   user_name            String      @unique
   email                String      @unique
   password             String
-  confirm_password     String
   role                 UserRole    @default(CUSTOMER)
   full_name            String
   address              String?
@@ -27,7 +26,7 @@ model User {
   deposits             Deposit[]
 
   withdrawals  Withdrawal[]
-  created_at    DateTime      @default(now())
+  created_at   DateTime      @default(now())
   update_at    DateTime      @updatedAt
   transactions Transaction[]
 
@@ -38,72 +37,77 @@ model User {
 }
 
 model Withdrawal {
-  withdrawal_id String @id @default(uuid())
-  amount        Float  @default(0.00)
-  rest_amount   Float  @default(0.00)
+  id          String @id @default(uuid())
+  amount      Float  @default(0.00)
+  rest_amount Float  @default(0.00)
 
   user_id String
-  user    User   @relation(fields: [user_id], references: [user_id])
+  user    User   @relation(fields: [user_id], references: [id])
 
-  creaed_at DateTime @default(now())
-  update_at DateTime @updatedAt
+  created_at DateTime @default(now())
+  update_at  DateTime @updatedAt
 
   @@map("withdrawals")
 }
 
 // Deposits Table
 model Deposit {
-  deposit_id   String @id @default(uuid())
+  id           String @id @default(uuid())
   amount       Float  @default(0.00)
   total_amount Float  @default(0.00)
 
-  user_id   String
-  user      User     @relation(fields: [user_id], references: [user_id])
-  creaed_at DateTime @default(now())
-  update_at DateTime @updatedAt
+  user_id    String
+  user       User     @relation(fields: [user_id], references: [id])
+  created_at DateTime @default(now())
+  update_at  DateTime @updatedAt
 
   @@map("deposits")
 }
 
 model Transaction {
-  transaction_id   Int    @id @default(autoincrement())
-  transaction_type String
-  amount           Float  @default(0.00)
+  id               String          @id @default(uuid())
+  transaction_type TransactionType @default(DEPOSIT)
+  amount           Float           @default(0.00)
 
   user_id String
-  user    User   @relation(fields: [user_id], references: [user_id])
+  user    User   @relation(fields: [user_id], references: [id])
 
-  creaed_at DateTime @default(now())
-  update_at DateTime @updatedAt
+  created_at DateTime @default(now())
+  update_at  DateTime @updatedAt
 
   @@map("transactions")
 }
 
 model Transfer {
-  transfer_id String @id @default(uuid())
-  amount      Float  @default(0.00)
+  id     String @id @default(uuid())
+  amount Float  @default(0.00)
 
   sender_id String
-  sender    User   @relation("Sender", fields: [sender_id], references: [user_id])
+  sender    User   @relation("Sender", fields: [sender_id], references: [id])
 
   receiver_id String
-  receiver    User   @relation("Receiver", fields: [receiver_id], references: [user_id])
+  receiver    User   @relation("Receiver", fields: [receiver_id], references: [id])
 
-  creaed_at DateTime @default(now())
-  update_at DateTime @updatedAt
+  created_at DateTime @default(now())
+  update_at  DateTime @updatedAt
 
   @@map("transfers")
 }
 
 model Card {
-  card_id         String   @id @default(uuid())
+  id              String   @id @default(uuid())
   card_type       CardType @default(CREDIT)
   card_number     String
   expiration_date String
   cvv             String
 
   user_id String
-  user    User   @relation(fields: [user_id], references: [user_id])
+  user    User   @relation(fields: [user_id], references: [id])
+
+  created_at DateTime @default(now())
+  update_at  DateTime @updatedAt
+
+  @@map("cards")
 }
 
 enum AccountType {

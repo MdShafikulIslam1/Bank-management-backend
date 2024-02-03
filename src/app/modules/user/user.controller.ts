@@ -5,10 +5,11 @@ import pick from '../../../shared/pick';
 import sendResponse from '../../../shared/sendResponse';
 import { UserService } from './user.service';
 import { userFilterableFields } from './user.constant';
+import { paginationOptionFields } from '../../../common/paginationOptions';
 
 const getAllFromDB = catchAsync(async (req: Request, res: Response) => {
   const filters = pick(req.query, userFilterableFields);
-  const options = pick(req.query, ['limit', 'page', 'sortBy', 'sortOrder']);
+  const options = pick(req.query, paginationOptionFields);
   const result = await UserService.getAllFromDB(filters, options);
   sendResponse(res, {
     statusCode: httpStatus.OK,

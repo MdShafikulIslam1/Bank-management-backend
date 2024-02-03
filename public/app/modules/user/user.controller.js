@@ -19,9 +19,10 @@ const pick_1 = __importDefault(require("../../../shared/pick"));
 const sendResponse_1 = __importDefault(require("../../../shared/sendResponse"));
 const user_service_1 = require("./user.service");
 const user_constant_1 = require("./user.constant");
+const paginationOptions_1 = require("../../../common/paginationOptions");
 const getAllFromDB = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const filters = (0, pick_1.default)(req.query, user_constant_1.userFilterableFields);
-    const options = (0, pick_1.default)(req.query, ['limit', 'page', 'sortBy', 'sortOrder']);
+    const options = (0, pick_1.default)(req.query, paginationOptions_1.paginationOptionFields);
     const result = yield user_service_1.UserService.getAllFromDB(filters, options);
     (0, sendResponse_1.default)(res, {
         statusCode: http_status_1.default.OK,

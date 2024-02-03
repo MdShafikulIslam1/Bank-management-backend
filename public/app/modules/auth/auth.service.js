@@ -21,14 +21,10 @@ const jwtHelpes_1 = require("../../../helpers/jwtHelpes");
 const config_1 = __importDefault(require("../../../config"));
 const sendEmail_1 = require("./sendEmail");
 const createAccount = (data) => __awaiter(void 0, void 0, void 0, function* () {
-    const { password, confirm_password } = data;
-    if (password !== confirm_password) {
-        throw new ApiError_1.default(http_status_1.default.BAD_REQUEST, 'Passwords do not match');
-    }
+    const { password } = data;
     const hashedPassword = yield bcrypt_1.default.hash(password, 12);
-    const hashedConfirmPassword = yield bcrypt_1.default.hash(confirm_password, 12);
     const result = yield prisma_1.default.user.create({
-        data: Object.assign(Object.assign({}, data), { password: hashedPassword, confirm_password: hashedConfirmPassword }),
+        data: Object.assign(Object.assign({}, data), { password: hashedPassword }),
     });
     return result;
 });
@@ -47,15 +43,15 @@ const login = (payload) => __awaiter(void 0, void 0, void 0, function* () {
         throw new ApiError_1.default(http_status_1.default.UNAUTHORIZED, 'Password is incorrect');
     }
     //create access token & refresh token
-    const { user_id, email, role } = isUserExist;
-    const accessToken = jwtHelpes_1.JwtHelpers.createToken({ user_id, email, role }, config_1.default.jwt.secret, config_1.default.jwt.expires_in);
+    const { id, email, role } = isUserExist;
+    const accessToken = jwtHelpes_1.JwtHelpers.createToken({ id, email, role }, config_1.default.jwt.secret, config_1.default.jwt.expires_in);
     return accessToken;
 });
 const changePassword = (user_id, payload) => __awaiter(void 0, void 0, void 0, function* () {
     const { oldPassword, newPassword } = payload;
     const isUserExist = yield prisma_1.default.user.findUnique({
         where: {
-            user_id: user_id,
+            id: user_id,
         },
     });
     if (!isUserExist) {
@@ -68,7 +64,7 @@ const changePassword = (user_id, payload) => __awaiter(void 0, void 0, void 0, f
     }
     yield prisma_1.default.user.update({
         where: {
-            user_id: user_id,
+            id: user_id,
         },
         data: {
             password: yield bcrypt_1.default.hash(newPassword, 12),
