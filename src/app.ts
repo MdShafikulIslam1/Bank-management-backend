@@ -6,7 +6,11 @@ import router from './app/routes';
 const app = express();
 
 //parser
-app.use(cors());
+app.use(
+  cors({
+    origin: 'https://bank-management-with-ant.vercel.app',
+  })
+);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
