@@ -6,9 +6,16 @@ import router from './app/routes';
 const app = express();
 
 //parser
+// app.use(
+//   cors({
+//     origin: ['https://bank-management-with-ant.vercel.app'],
+//     credentials: true,
+//   })
+// );
+
 app.use(
   cors({
-    origin: ['https://bank-management-with-ant.vercel.app'],
+    origin: 'https://bank-management-with-ant.vercel.app',
     credentials: true,
   })
 );
