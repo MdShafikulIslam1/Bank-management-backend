@@ -75,7 +75,7 @@ const changePassword = (user_id, payload) => __awaiter(void 0, void 0, void 0, f
 const forgotPassword = (email) => __awaiter(void 0, void 0, void 0, function* () {
     const isUserExist = yield prisma_1.default.user.findUnique({
         where: {
-            email: email,
+            email,
         },
     });
     if (!isUserExist) {
@@ -139,8 +139,8 @@ const forgotPassword = (email) => __awaiter(void 0, void 0, void 0, function* ()
     `);
     return 'Please check your email for the reset password link.';
 });
-const resetPassword = (payload, token) => __awaiter(void 0, void 0, void 0, function* () {
-    const { email, newPassword } = payload;
+const resetPassword = (payload) => __awaiter(void 0, void 0, void 0, function* () {
+    const { email, newPassword, token } = payload;
     const isUserExist = yield prisma_1.default.user.findUnique({
         where: {
             email: email,
