@@ -93,7 +93,7 @@ const changePassword = async (
 const forgotPassword = async (email: string) => {
   const isUserExist = await prisma.user.findUnique({
     where: {
-      email: email,
+      email,
     },
   });
 
@@ -166,11 +166,12 @@ const forgotPassword = async (email: string) => {
   return 'Please check your email for the reset password link.';
 };
 
-const resetPassword = async (
-  payload: { email: string; newPassword: string },
-  token: string
-) => {
-  const { email, newPassword } = payload;
+const resetPassword = async (payload: {
+  email: string;
+  newPassword: string;
+  token: string;
+}) => {
+  const { email, newPassword, token } = payload;
   const isUserExist = await prisma.user.findUnique({
     where: {
       email: email,
