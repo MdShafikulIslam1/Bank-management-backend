@@ -14,19 +14,19 @@ const app = express();
 // );
 
 //for deployment use case
-app.use(
-  cors({
-    origin: 'https://bank-management-with-ant.vercel.app',
-    credentials: true,
-  })
-);
-//for locally use case
 // app.use(
 //   cors({
-//     origin: 'http://localhost:3000',
+//     origin: 'https://bank-management-with-ant.vercel.app',
 //     credentials: true,
 //   })
 // );
+//for locally use case
+app.use(
+  cors({
+    origin: 'http://localhost:3000',
+    credentials: true,
+  })
+);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
